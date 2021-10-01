@@ -22,13 +22,11 @@ const RepoList = () => {
             "Authorization": `Basic ${btoa((str))}`
           });
           if(searchField === "") return;
-          console.log("page in getData", page);
           fetch(`https://api.github.com/orgs/${searchField}/repos?per_page=10&page=${page}`, {
             headers : myHeaders
           }).then(response => response.json())
           .then(data => {
             let repos = data;
-            console.log("repos", repos)
             if(reposList.length !== 0){
               if(reposList[reposList.length-1].owner.login === repos[0].owner.login){
                 repos = [...reposList, ...repos];
@@ -49,7 +47,6 @@ const RepoList = () => {
     useEffect(() => {
         const handleScroll = () => {
             if (window.innerHeight + document.documentElement.scrollTop < document.documentElement.scrollHeight) return;
-            console.log("reached end", orgGithubState)
             setorgGithubState({...orgGithubState, loading: true})
         }
         window.addEventListener('scroll', handleScroll);
@@ -60,7 +57,6 @@ const RepoList = () => {
         if (!loading) return;
         const nextPage = () => {
             if(orgGithubState){
-                console.log("orgGithubState in nextPage", orgGithubState);
                 const nextPage = page+1;
                 setorgGithubState({...orgGithubState, page: nextPage})
             }
@@ -72,7 +68,6 @@ const RepoList = () => {
         event.preventDefault(); 
         setorgGithubState({...orgGithubState, searchField : event.target.children[0].value})
     }
-    console.log("before return",orgGithubState)
     return (
         <div className="repo-list">
             <SearchBox searchSubmit={searchSubmitHandle}/>
